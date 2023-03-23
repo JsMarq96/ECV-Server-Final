@@ -113,6 +113,14 @@ var GAME_SERVER_MANAGER = {
         obj.direction = [0,0,0];
       }
     }
+  },
+  get_user_ids_on_table: function(table_id) {
+    var ids = [];
+    for(const seat in this.tables[table_id].seats) {
+      ids.append(this.tables[table_id].seats[seat].id);
+    }
+
+    return ids;
   }
   
 };

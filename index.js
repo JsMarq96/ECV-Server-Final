@@ -120,6 +120,17 @@ function config() {
         for(const key in conversations_socket) {
           conversations_socket[key].send(result_msg);
         }
+      } else if (msg_obj.type.localeCompare("message") == 0) {
+        var user_on_table = GAME_MANAGER.get_user_ids_on_table(msg_obj.table_id);
+
+        var result_msg = JSON.stringify({'type':'message', 'from': ws._user_id, 'message': msg_obj.message, 'table_id': msg_obj.table_id});
+
+        // Only send the message if the user is in the table
+        if (ws._user_id in user_on_table) {
+          for(const key in user_on_table) {
+            conversations_socket[key].send(result_msg);
+          }
+        }
       }
     });
     ws.on('error', function(err) {
