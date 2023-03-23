@@ -134,9 +134,8 @@ function config() {
       }
     });
     ws.on('error', function(err) {
-      console.log('Error on ws');
-      // TODO remove the user from the rooms
-      GAME_MANAGER.remove_user(ws._user_id, GAME_MANAGER.user_room_id[ws._user_id]);
+      console.log('Error on ws, usually disconection from teh user');
+      GAME_MANAGER.remove_user(ws._user_id);
     });
 
     ws.on('close', function(err) {
@@ -145,10 +144,10 @@ function config() {
       // Remove the user's stored websocket
       delete conversations_socket[ws._user_id];
       // Remove the user from the rooms
-      GAME_MANAGER.remove_user(ws._user_id, GAME_MANAGER.user_room_id[ws._user_id]);
+      GAME_MANAGER.remove_user(ws._user_id);
 
       // Send the discoenct message to the other users on the room
-      var user_ids = GAME_MANAGER.get_users_id_on_chatroom(GAME_MANAGER.user_room_id[ws._user_id]);
+      /*var user_ids = GAME_MANAGER.get_users_id_on_chatroom(GAME_MANAGER.user_room_id[ws._user_id]);
       if (user_ids != null) {
         var msg_obj = JSON.stringify({'type':'user_disconnect',
                                       'name': GAME_MANAGER.user_id_name[ws._user_id],
@@ -156,7 +155,7 @@ function config() {
         for(var i = 0; i < user_ids.length; i++) {
           conversations_socket[user_ids[i]].send(msg_obj);
         }
-      }
+      }*/
     });
   });
 

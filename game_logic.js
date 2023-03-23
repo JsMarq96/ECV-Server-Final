@@ -47,6 +47,26 @@ var GAME_SERVER_MANAGER = {
     return curr_user;
   },
 
+  remove_user: function(user_id) {
+    var user_data = this.users[user_id];
+
+    // Check if it is in a table
+    if (user_data.table != null && user_data.seat != null) {
+      this.tables[user_data.table].delete(user_data.seat);
+      this.users.delete(user_id);
+      return;
+    }
+    
+    // If is free roaming, delete it there
+    for(var i = 0; i < this.free_roaming_users.length; i++) {
+      if (user_id == this.free_roaming_users[i].id) {
+        this.free_roaming_users.splice(i, 1);
+        this.users.delete(user_id);
+        return;
+      }
+    }
+  },
+
   get_next_empty_seat: function(table){
     for(var i = 0; i < 6; i++) {
       if (!(i in GAME_SERVER_MANAGER.tables[table])) {
