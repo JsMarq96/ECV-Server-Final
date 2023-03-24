@@ -27,6 +27,7 @@ function config() {
       // - Send message
       // - Send close message
       // - Change room
+      console.log(msg_obj, "New mesasge");
 
       if (msg_obj.type.localeCompare("login") == 0) {
         USER_MANAGER.login(msg_obj.data, function(result) {
@@ -57,6 +58,7 @@ function config() {
                                                    'id': result,
                                                    'style':msg_obj.style, 
                                                    'room_state': GAME_MANAGER.get_state()});
+              console.log(GAME_MANAGER.get_state());
 
               ws.send(logged_in_msg);
             }
@@ -173,6 +175,8 @@ function init() {
   app_express, express_ws = require('@wll8/express-ws')(app_express);
 
   console.log('Activate express and websocket');
+
+  GAME_MANAGER.init();
 
   // When you stablish the databases connection, launch the server
   chat_manager = CHAT_MANAGER.init(config);

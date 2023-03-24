@@ -22,9 +22,11 @@ var GAME_SERVER_MANAGER = {
 
   get_state: function () {
     const game_state = {
-      tables: [... this.tables],
+      tables: {... this.tables},
       free_roaming_users: [... this.free_roaming_users]
     };
+
+    return game_state;
   },
 
   add_user: function(user, style) {
@@ -48,6 +50,7 @@ var GAME_SERVER_MANAGER = {
   },
 
   remove_user: function(user_id) {
+    console.log(user_id);
     var user_data = this.users[user_id];
 
     // Check if it is in a table
@@ -61,7 +64,7 @@ var GAME_SERVER_MANAGER = {
     for(var i = 0; i < this.free_roaming_users.length; i++) {
       if (user_id == this.free_roaming_users[i].id) {
         this.free_roaming_users.splice(i, 1);
-        this.users.delete(user_id);
+        //this.users.delete(user_id);
         return;
       }
     }

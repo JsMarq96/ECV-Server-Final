@@ -30,7 +30,7 @@ var USER_MANAGER = {
   },
 
 
-  login: function(hash, style, on_finish) {
+  login: function(hash, on_finish) {
     var key = 'user_' + hash;
     console.log("Login attempt: ", key);
 
