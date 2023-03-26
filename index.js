@@ -137,16 +137,21 @@ function config() {
     });
     ws.on('error', function(err) {
       console.log('Error on ws, usually disconection from teh user');
-      GAME_MANAGER.remove_user(ws._user_id);
+      if (ws._user_id != undefined) {
+        GAME_MANAGER.remove_user(ws._user_id);
+      }
     });
 
     ws.on('close', function(err) {
       console.log('User disconected');
+      if (ws._user_id != undefined) {
+        // Remove the user's stored websocket
+        delete conversations_socket[ws._user_id];
+        // Remove the user from the rooms
+        GAME_MANAGER.remove_user(ws._user_id);
+      }
 
-      // Remove the user's stored websocket
-      delete conversations_socket[ws._user_id];
-      // Remove the user from the rooms
-      GAME_MANAGER.remove_user(ws._user_id);
+      
 
       // Send the discoenct message to the other users on the room
       /*var user_ids = GAME_MANAGER.get_users_id_on_chatroom(GAME_MANAGER.user_room_id[ws._user_id]);
