@@ -92,9 +92,10 @@ function config() {
           for(const key in conversations_socket) {
             conversations_socket[key].send(result_msg);
           }
-        } 
+        } else {
+          ws.send(JSON.stringify({'type':'full_table'})); // Error
+        }
       
-        ws.send(JSON.stringify({'type':'full_table'})); // Error
       } else if (msg_obj.type.localeCompare("move_out_of_table") == 0) {
         
         var new_pos = GAME_MANAGER.move_from_table(ws._user_id);
