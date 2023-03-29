@@ -55,7 +55,7 @@ var GAME_SERVER_MANAGER = {
 
     // Check if it is in a table
     if (user_data.table != null && user_data.seat != null) {
-      delete this.tables[user_data.table][user_data.seat];
+      delete this.tables[user_data.table].seats[user_data.seat];
       delete this.users[user_id];
       return;
     }
@@ -96,7 +96,7 @@ var GAME_SERVER_MANAGER = {
       return -1;
     }
 
-    this.tables[table][get_seat] = obj;
+    this.tables[table].seats[get_seat] = obj;
     this.users[user].table = table;
     this.users[user].seat = get_seat;
 
@@ -106,8 +106,8 @@ var GAME_SERVER_MANAGER = {
   move_from_table: function(user) {
     var user_data = this.users[user];
 
-    var obj = this.tables[user_data.table][user_data.seat];
-    delete this.tables[user_data.table][user_data.seat];
+    var obj = this.tables[user_data.table].seats[user_data.seat];
+    delete this.tables[user_data.table].seats[user_data.seat];
 
     this.free_roaming_users.push(obj);
 
@@ -140,10 +140,14 @@ var GAME_SERVER_MANAGER = {
   get_user_ids_on_table: function(table_id) {
     var ids = [];
     for(const seat in this.tables[table_id].seats) {
-      ids.append(this.tables[table_id].seats[seat].id);
+      ids.push(parseInt(this.tables[table_id].seats[seat].id));
     }
 
     return ids;
+  },
+
+  get_players_table: function(user_id) {
+    return this.users[user_id].table;
   }
   
 };
