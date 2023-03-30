@@ -14,7 +14,7 @@ var GAME_SERVER_MANAGER = {
     GAME_SERVER_MANAGER.free_roaming_users = [];
     GAME_SERVER_MANAGER.users = {};
 
-    GAME_SERVER_MANAGER.starting_pos = [0,0,0];
+    GAME_SERVER_MANAGER.starting_pos = [88,0,98];
     
 
     return GAME_SERVER_MANAGER;

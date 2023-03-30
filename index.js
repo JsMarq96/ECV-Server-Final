@@ -144,7 +144,7 @@ function config() {
           }
         }
       } else if (msg_obj.type.localeCompare("new_song") == 0) {
-        curr_song_index = parseInt(msg_obj.song_id);
+        curr_song_index = parseInt(msg_obj.song_id) % 6;
         starting_date_login = new Date();
         var new_song_message = JSON.stringify({'type':'new_song', 'starting_playlist_date': starting_date_login, 'starting_song': curr_song_index,});
 
