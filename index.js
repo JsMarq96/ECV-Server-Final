@@ -3,15 +3,15 @@ var USER_MANAGER = require('./user_manager.js').users;
 var GAME_MANAGER = require('./game_logic.js').game_server;
 
 var app_express = {};
-var express_ws = {};
-var chat_manager = {};
 
-var users_conected = [];
 var conversations_socket = {};
-var chat_conversation_socket= {};
 
 GAME_MANAGER.init();
 USER_MANAGER.init();
+
+var starting_date_login = null;
+var curr_song_index = 0;
+var current_user_count = 0;
 
 function config() {
 
@@ -54,13 +54,20 @@ function config() {
 
               conversations_socket[result] = ws;
 
+              if (starting_date_login == null) {
+                starting_date_login = new Date();
+              }
+
               var logged_in_msg = JSON.stringify({'type':'logged_in',
                                                    'id': result,
-                                                   'style':msg_obj.style, 
+                                                   'style':msg_obj.style,
+                                                   'starting_playlist_date': starting_date_login,
+                                                   'starting_song': curr_song_index,
                                                    'room_state': GAME_MANAGER.get_state()});
               console.log(GAME_MANAGER.get_state());
 
               ws.send(logged_in_msg);
+              current_user_count++;
             }
           }
         });
@@ -136,6 +143,14 @@ function config() {
             conversations_socket[user_on_table[key]].send(result_msg);
           }
         }
+      } else if (msg_obj.type.localeCompare("new_song") == 0) {
+        curr_song_index = parseInt(msg_obj.song_id);
+        starting_date_login = new Date();
+        var new_song_message = JSON.stringify({'type':'new_song', 'starting_playlist_date': starting_date_login, 'starting_song': curr_song_index,});
+
+        for(const key in conversations_socket) {
+          conversations_socket[key].send(new_song_message);
+        }
       }
     });
     ws.on('error', function(err) {
@@ -148,10 +163,14 @@ function config() {
     ws.on('close', function(err) {
       console.log('User disconected');
       if (ws._user_id != undefined) {
+        current_user_count--;
         // Remove the user's stored websocket
         delete conversations_socket[ws._user_id];
         // Remove the user from the rooms
         GAME_MANAGER.remove_user(ws._user_id);
+        if (current_user_count == 0) {
+          //starting_date_login = null;
+        }
       }
 
       
