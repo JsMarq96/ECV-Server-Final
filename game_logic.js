@@ -72,7 +72,7 @@ var GAME_SERVER_MANAGER = {
 
   get_next_empty_seat: function(table){
     for(var i = 0; i < 4; i++) {
-      if (!(i in GAME_SERVER_MANAGER.tables[table])) {
+      if (!(i in GAME_SERVER_MANAGER.tables[table].seats)) {
         return i;
       }
     }
@@ -148,6 +148,9 @@ var GAME_SERVER_MANAGER = {
 
   get_players_table: function(user_id) {
     return this.users[user_id].table;
+  },
+  get_players_seat: function(user_id) {
+    return this.users[user_id].seat;
   }
   
 };

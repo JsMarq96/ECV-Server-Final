@@ -95,6 +95,7 @@ function config() {
 
         if (seat_id != -1) {
           const result_msg = JSON.stringify({'type':'move_to_table', 'user_id': ws._user_id, 'table': msg_obj.table, 'seat': seat_id});
+          console.log("response ", result_msg);
           
           for(const key in conversations_socket) {
             conversations_socket[key].send(result_msg);
@@ -133,15 +134,11 @@ function config() {
       } else if (msg_obj.type.localeCompare("message") == 0) {
         var user_on_table = GAME_MANAGER.get_user_ids_on_table(GAME_MANAGER.get_players_table(ws._user_id));
 
-        var result_msg = JSON.stringify({'type':'message', 'from': ws._user_id, 'message': msg_obj.message, 'table_id': msg_obj.table_id});
+        var result_msg = JSON.stringify({'type':'message', 'from': ws._user_id, 'message': msg_obj.message, 'table_id': msg_obj.table_id, 'seat_id': GAME_MANAGER.get_players_seat(ws._user_id)});
         console.log(user_on_table, ws._user_id);
 
-        // Only send the message if the user is in the table
-        if (ws._user_id.includes(user_on_table)) {
-          
-          for(const key in user_on_table) {
-            conversations_socket[user_on_table[key]].send(result_msg);
-          }
+        for(const key in user_on_table) {
+          conversations_socket[user_on_table[key]].send(result_msg);
         }
       } else if (msg_obj.type.localeCompare("new_song") == 0) {
         curr_song_index = parseInt(msg_obj.song_id) % 6;
@@ -169,7 +166,12 @@ function config() {
         // Remove the user from the rooms
         GAME_MANAGER.remove_user(ws._user_id);
         if (current_user_count == 0) {
-          //starting_date_login = null;
+          starting_date_login = null;
+        }
+
+        var user_disc_message = JSON.stringify({'type':'user_disconected', 'user_id': ws._user_id});
+        for(const key in conversations_socket) {
+          conversations_socket[key].send(user_disc_message);
         }
       }
 
