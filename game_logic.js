@@ -29,9 +29,10 @@ var GAME_SERVER_MANAGER = {
     return game_state;
   },
 
-  add_user: function(user, style) {
+  add_user: function(user, user_name, style) {
     var curr_user = {
       id: user,
+      name: user_name,
       mode: FREE_ROAM_MODE,
       position: [... GAME_SERVER_MANAGER.starting_pos],
       direction: [0,0,0],

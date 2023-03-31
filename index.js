@@ -43,7 +43,7 @@ function config() {
               // Success login in
               ws._user_id = result;
 
-              var user_obj = GAME_MANAGER.add_user(result, msg_obj.style);
+              var user_obj = GAME_MANAGER.add_user(result,  msg_obj.name, msg_obj.style);
 
               var new_user_obj = JSON.stringify({'type': 'new_character',
                                                  'user': user_obj});
@@ -60,6 +60,7 @@ function config() {
 
               var logged_in_msg = JSON.stringify({'type':'logged_in',
                                                    'id': result,
+                                                   'name': msg_obj.name,
                                                    'style':msg_obj.style,
                                                    'starting_playlist_date': starting_date_login,
                                                    'starting_song': curr_song_index,
